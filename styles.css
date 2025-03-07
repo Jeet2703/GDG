@@ -542,3 +542,17 @@ footer .react-logo {
 .heart {
   color: #ac4b56;
 }
+
+.hint-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.hint-text {
+  font-size: 1.2em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 4px;
+  display: inline-block;
+}

@@ -5,7 +5,7 @@ var Hangmanizr = React.createClass({
   getInitialState: function getInitialState() {
     return {
       alphabet: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "@", "-"],
-      words: "",
+      words: [],
       randomWord: "",
       letters: [],
       clickedLetters: [],
@@ -17,43 +17,396 @@ var Hangmanizr = React.createClass({
       nextWord: false,
       chosenLevel: "medium",
       score: 0,
-      gameOver: false
+      gameOver: false,
+      currentHint: "" // New state for the hint
     };
   },
-  animalsGame: function animalsGame(e) {
-    var animals = ["aardvark", "albatross", "alligator", "alpaca", "ant", "anteater", "antelope", "ape", "armadillo", "donkey", "baboon", "badger", "barracuda", "bat", "bear", "beaver", "bee", "bison", "boar", "buffalo", "butterfly", "camel", "capybara", "caribou", "cassowary", "cat", "caterpillar", "cattle", "chamois", "cheetah", "chicken", "chimpanzee", "chinchilla", "chough", "clam", "cobra", "cockroach", "cod", "cormorant", "coyote", "crab", "crane", "crocodile", "crow", "curlew", "deer", "dinosaur", "dog", "dogfish", "dolphin", "donkey", "dotterel", "dove", "dragonfly", "duck", "dugong", "dunlin", "eagle", "echidna", "eel", "eland", "elephant", "elephant-seal", "elk", "emu", "falcon", "ferret", "finch", "fish", "flamingo", "fly", "fox", "frog", "gaur", "gazelle", "gerbil", "giant-panda", "giraffe", "gnat", "gnu", "goat", "goose", "goldfinch", "goldfish", "gorilla", "goshawk", "grasshopper", "grouse", "guanaco", "guinea-fowl", "guinea-pig", "gull", "hamster", "hare", "hawk", "hedgehog", "heron", "herring", "hippopotamus", "hornet", "horse", "human", "hummingbird", "hyena", "ibex", "ibis", "jackal", "jaguar", "jay", "jellyfish", "kangaroo", "kingfisher", "koala", "komodo-dragon", "kookabura", "kouprey", "kudu", "lapwing", "lark", "lemur", "leopard", "lion", "llama", "lobster", "locust", "loris", "louse", "lyrebird", "magpie", "mallard", "manatee", "mandrill", "mantis", "marten", "meerkat", "mink", "mole", "mongoose", "monkey", "moose", "mouse", "mosquito", "mule", "narwhal", "newt", "nightingale", "octopus", "okapi", "opossum", "oryx", "ostrich", "otter", "owl", "ox", "oyster", "panther", "parrot", "partridge", "peafowl", "pelican", "penguin", "pheasant", "pig", "pigeon", "polar-bear", "pony", "porcupine", "porpoise", "prairie-dog", "quail", "quelea", "quetzal", "rabbit", "raccoon", "rail", "ram", "rat", "raven", "red-deer", "red-panda", "reindeer", "rhinoceros", "rook", "salamander", "salmon", "sand-dollar", "sandpiper", "sardine", "scorpion", "sea-lion", "sea-urchin", "seahorse", "seal", "shark", "sheep", "shrew", "skunk", "snail", "snake", "sparrow", "spider", "spoonbill", "squid", "squirrel", "starling", "stingray", "stinkbug", "stork", "swallow", "swan", "tapir", "tarsier", "termite", "tiger", "toad", "trout", "turkey", "turtle", "vicuña", "viper", "vulture", "wallaby", "walrus", "wasp", "water-buffalo", "weasel", "whale", "wolf", "wolverine", "wombat", "woodcock", "woodpecker", "worm", "wren", "yak", "zebra"];
-    this.setState({
-      words: animals,
-      letters: [],
-      clickedLetters: [],
-      matchedLetters: [],
-      lives: this.state.initialLives,
-      clickedButton: e.target.value,
-      gameStarted: true,
-      score: 0
-    });
-    setTimeout(function () {
-      this.getRandom();
-    }.bind(this), 100);
-  },
-  cssPropertiesGame: function cssPropertiesGame(e) {
-    var cssProperties = ["align-content", "align-items", "align-self", "all", "animation", "animation-delay", "animation-direction", "animation-duration", "animation-fill-mode", "animation-iteration-count", "animation-name", "animation-play-state", "animation-timing-function", "backface-visibility", "background", "background-attachment", "background-blend-mode", "background-clip", "background-color", "background-image", "background-origin", "background-position", "background-repeat", "background-size", "border", "border-bottom", "border-bottom-color", "border-bottom-left-radius", "border-bottom-right-radius", "border-bottom-style", "border-bottom-width", "border-collapse", "border-color", "border-image", "border-image-outset", "border-image-repeat", "border-image-slice", "border-image-source", "border-image-width", "border-left", "border-left-color", "border-left-style", "border-left-width", "border-radius", "border-right", "border-right-color", "border-right-style", "border-right-width", "border-spacing", "border-style", "border-top", "border-top-color", "border-top-left-radius", "border-top-right-radius", "border-top-style", "border-top-width", "border-width", "bottom", "box-shadow", "box-sizing", "caption-side", "clear", "clip", "color", "column-count", "column-fill", "column-gap", "column-rule", "column-rule-color", "column-rule-style", "column-rule-width", "column-span", "column-width", "columns", "content", "counter-increment", "counter-reset", "cursor", "direction", "display", "empty-cells", "filter", "flex", "flex-basis", "flex-direction", "flex-flow", "flex-grow", "flex-shrink", "flex-wrap", "float", "font", "@font-face", "font-family", "font-size", "font-size-adjust", "font-stretch", "font-style", "font-variant", "font-weight", "hanging-punctuation", "height", "justify-content", "@keyframes", "left", "letter-spacing", "line-height", "list-style", "list-style-image", "list-style-position", "list-style-type", "margin", "margin-bottom", "margin-left", "margin-right", "margin-top", "max-height", "max-width", "@media", "min-height", "min-width", "nav-down", "nav-index", "nav-left", "nav-right", "nav-up", "opacity", "order", "outline", "outline-color", "outline-offset", "outline-style", "outline-width", "overflow", "overflow-x", "overflow-y", "padding", "padding-bottom", "padding-left", "padding-right", "padding-top", "page-break-after", "page-break-before", "page-break-inside", "perspective", "perspective-origin", "position", "quotes", "resize", "right", "tab-size", "table-layout", "text-align", "text-align-last", "text-decoration", "text-decoration-color", "text-decoration-line", "text-decoration-style", "text-indent", "text-justify", "text-overflow", "text-shadow", "text-transform", "top", "transform", "transform-origin", "transform-style", "transition", "transition-delay", "transition-duration", "transition-property", "transition-timing-function", "unicode-bidi", "vertical-align", "visibility", "white-space", "width", "word-break", "word-spacing", "word-wrap", "z-index"];
-    this.setState({
-      words: cssProperties,
-      letters: [],
-      clickedLetters: [],
-      matchedLetters: [],
-      lives: this.state.initialLives,
-      clickedButton: e.target.value,
-      gameStarted: true,
-      score: 0
-    });
-    setTimeout(function () {
-      this.getRandom();
-    }.bind(this), 100);
-  },
   htmlElementsGame: function htmlElementsGame(e) {
-    var htmlElements = ["base", "head", "link", "metal", "style", "title", "address", "article", "aside", "footer", "header", "hgroup", "nav", "section", "dd", "div", "dl", "dt", "figcaption", "figure", "hr", "li", "main", "ol", "p", "pre", "ul", "a", "abbr", "b", "bdi", "bdo", "br", "cite", "code", "data", "dfn", "em", "i", "kbd", "mark", "q", "rp", "rt", "rtc", "ruby", "s", "samp", "small", "span", "strong", "sub", "sup", "time", "u", "var", "wbr", "area", "audio", "img", "map", "track", "video", "embed", "object", "param", "source", "canvas", "noscript", "script", "del", "ins", "caption", "col", "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "button", "datalist", "fieldset", "form", "input", "label", "legend", "meter", "optgroup", "option", "output", "progress", "select", "textarea", "details", "dialog", "menu", "menuitem", "summary", "content", "element", "shadow", "template", "acronym", "applet", "basefont", "big", "blink", "center", "command", "content", "dir", "font", "frame", "frameset", "isindex", "keygen", "listing", "marquee", "multicol", "nextid", "noembed", "plaintext", "spacer", "strike", "tt", "xmp"];
+    var htmlElements = [{
+      word: "base",
+      hint: "Specifies the base URL/target for all relative URLs in a document"
+    }, {
+      word: "head",
+      hint: "Container for metadata (data about data)"
+    }, {
+      word: "link",
+      hint: "Defines the relationship between a document and an external resource"
+    }, {
+      word: "meta",
+      hint: "Provides metadata about the HTML document"
+    }, {
+      word: "style",
+      hint: "Defines style information for a document"
+    }, {
+      word: "title",
+      hint: "Defines the title of the document"
+    }, {
+      word: "address",
+      hint: "Defines contact information for the author/owner of a document"
+    }, {
+      word: "article",
+      hint: "Defines independent, self-contained content"
+    }, {
+      word: "aside",
+      hint: "Defines content aside from the page content"
+    }, {
+      word: "footer",
+      hint: "Defines a footer for a document or section"
+    }, {
+      word: "header",
+      hint: "Defines a header for a document or section"
+    }, {
+      word: "hgroup",
+      hint: "Groups heading elements (h1 to h6)"
+    }, {
+      word: "nav",
+      hint: "Defines navigation links"
+    }, {
+      word: "section",
+      hint: "Defines a section in a document"
+    }, {
+      word: "dd",
+      hint: "Defines a description/value of a term in a description list"
+    }, {
+      word: "div",
+      hint: "Defines a section in a document"
+    }, {
+      word: "dl",
+      hint: "Defines a description list"
+    }, {
+      word: "dt",
+      hint: "Defines a term/name in a description list"
+    }, {
+      word: "figcaption",
+      hint: "Defines a caption for a <figure> element"
+    }, {
+      word: "figure",
+      hint: "Specifies self-contained content, like illustrations"
+    }, {
+      word: "hr",
+      hint: "Defines a thematic change in the content"
+    }, {
+      word: "li",
+      hint: "Defines a list item"
+    }, {
+      word: "main",
+      hint: "Specifies the main content of a document"
+    }, {
+      word: "ol",
+      hint: "Defines an ordered list"
+    }, {
+      word: "p",
+      hint: "Defines a paragraph"
+    }, {
+      word: "pre",
+      hint: "Defines preformatted text"
+    }, {
+      word: "ul",
+      hint: "Defines an unordered list"
+    }, {
+      word: "a",
+      hint: "Defines a hyperlink"
+    }, {
+      word: "abbr",
+      hint: "Defines an abbreviation or acronym"
+    }, {
+      word: "b",
+      hint: "Defines bold text"
+    }, {
+      word: "bdi",
+      hint: "Isolates a part of text that might be formatted in a different direction"
+    }, {
+      word: "bdo",
+      hint: "Overrides the current text direction"
+    }, {
+      word: "br",
+      hint: "Defines a single line break"
+    }, {
+      word: "cite",
+      hint: "Defines the title of a work"
+    }, {
+      word: "code",
+      hint: "Defines a piece of computer code"
+    }, {
+      word: "data",
+      hint: "Links the given content with a machine-readable translation"
+    }, {
+      word: "dfn",
+      hint: "Represents the defining instance of a term"
+    }, {
+      word: "em",
+      hint: "Defines emphasized text"
+    }, {
+      word: "i",
+      hint: "Defines a part of text in an alternate voice or mood"
+    }, {
+      word: "kbd",
+      hint: "Defines keyboard input"
+    }, {
+      word: "mark",
+      hint: "Defines marked/highlighted text"
+    }, {
+      word: "q",
+      hint: "Defines a short quotation"
+    }, {
+      word: "rp",
+      hint: "Defines what to show in browsers that do not support ruby annotations"
+    }, {
+      word: "rt",
+      hint: "Defines an explanation/pronunciation of characters (for East Asian typography)"
+    }, {
+      word: "rtc",
+      hint: "Defines a container for Ruby text components"
+    }, {
+      word: "ruby",
+      hint: "Defines a ruby annotation (for East Asian typography)"
+    }, {
+      word: "s",
+      hint: "Defines text that is no longer correct"
+    }, {
+      word: "samp",
+      hint: "Defines sample output from a computer program"
+    }, {
+      word: "small",
+      hint: "Defines smaller text"
+    }, {
+      word: "span",
+      hint: "Defines a section in a document"
+    }, {
+      word: "strong",
+      hint: "Defines important text"
+    }, {
+      word: "sub",
+      hint: "Defines subscripted text"
+    }, {
+      word: "sup",
+      hint: "Defines superscripted text"
+    }, {
+      word: "time",
+      hint: "Defines a date/time"
+    }, {
+      word: "u",
+      hint: "Defines text that should be stylistically different from normal text"
+    }, {
+      word: "var",
+      hint: "Defines a variable"
+    }, {
+      word: "wbr",
+      hint: "Defines a possible line-break"
+    }, {
+      word: "area",
+      hint: "Defines an area inside an image map"
+    }, {
+      word: "audio",
+      hint: "Defines sound content"
+    }, {
+      word: "img",
+      hint: "Defines an image"
+    }, {
+      word: "map",
+      hint: "Defines a client-side image map"
+    }, {
+      word: "track",
+      hint: "Defines text tracks for media elements (<audio> and <video>)"
+    }, {
+      word: "video",
+      hint: "Defines embedded video content"
+    }, {
+      word: "embed",
+      hint: "Defines a container for an external application"
+    }, {
+      word: "object",
+      hint: "Defines an embedded object"
+    }, {
+      word: "param",
+      hint: "Defines a parameter for an object"
+    }, {
+      word: "source",
+      hint: "Defines multiple media resources for media elements (<video> and <audio>)"
+    }, {
+      word: "canvas",
+      hint: "Used to draw graphics, on the fly, via scripting"
+    }, {
+      word: "noscript",
+      hint: "Defines an alternate content for users that do not support client-side scripts"
+    }, {
+      word: "script",
+      hint: "Defines a client-side script"
+    }, {
+      word: "del",
+      hint: "Defines text that has been deleted from a document"
+    }, {
+      word: "ins",
+      hint: "Defines a text that has been inserted into a document"
+    }, {
+      word: "caption",
+      hint: "Defines a table caption"
+    }, {
+      word: "col",
+      hint: "Specifies column properties for each column within a <colgroup> element"
+    }, {
+      word: "colgroup",
+      hint: "Specifies a group of one or more columns in a table for formatting"
+    }, {
+      word: "table",
+      hint: "Defines a table"
+    }, {
+      word: "tbody",
+      hint: "Groups the body content in a table"
+    }, {
+      word: "td",
+      hint: "Defines a cell in a table"
+    }, {
+      word: "tfoot",
+      hint: "Groups the footer content in a table"
+    }, {
+      word: "th",
+      hint: "Defines a header cell in a table"
+    }, {
+      word: "thead",
+      hint: "Groups the header content in a table"
+    }, {
+      word: "tr",
+      hint: "Defines a row in a table"
+    }, {
+      word: "button",
+      hint: "Defines a clickable button"
+    }, {
+      word: "datalist",
+      hint: "Specifies a list of pre-defined options for input controls"
+    }, {
+      word: "fieldset",
+      hint: "Groups related elements in a form"
+    }, {
+      word: "form",
+      hint: "Defines an HTML form for user input"
+    }, {
+      word: "input",
+      hint: "Defines an input control"
+    }, {
+      word: "label",
+      hint: "Defines a label for an <input> element"
+    }, {
+      word: "legend",
+      hint: "Defines a caption for a <fieldset> element"
+    }, {
+      word: "meter",
+      hint: "Defines a scalar measurement within a known range"
+    }, {
+      word: "optgroup",
+      hint: "Defines a group of related options in a drop-down list"
+    }, {
+      word: "option",
+      hint: "Defines an option in a drop-down list"
+    }, {
+      word: "output",
+      hint: "Defines the result of a calculation"
+    }, {
+      word: "progress",
+      hint: "Represents the progress of a task"
+    }, {
+      word: "select",
+      hint: "Defines a drop-down list"
+    }, {
+      word: "textarea",
+      hint: "Defines a multi-line text input control"
+    }, {
+      word: "details",
+      hint: "Defines additional details that the user can view or hide"
+    }, {
+      word: "dialog",
+      hint: "Defines a dialog box or window"
+    }, {
+      word: "menu",
+      hint: "Defines a list/menu of commands"
+    }, {
+      word: "menuitem",
+      hint: "Defines a command/menu item that the user can invoke"
+    }, {
+      word: "summary",
+      hint: "Defines a visible heading for a <details> element"
+    }, {
+      word: "content",
+      hint: "Used with Shadow DOM to define insertion points"
+    }, {
+      word: "element",
+      hint: "Defines a custom element"
+    }, {
+      word: "shadow",
+      hint: "Defines a shadow DOM tree"
+    }, {
+      word: "template",
+      hint: "Defines a template for reusable content"
+    }, {
+      word: "acronym",
+      hint: "Defines an acronym (not supported in HTML5)"
+    }, {
+      word: "applet",
+      hint: "Defines an embedded applet (not supported in HTML5)"
+    }, {
+      word: "basefont",
+      hint: "Specifies a default color, size, and font for all text in a document (not supported in HTML5)"
+    }, {
+      word: "big",
+      hint: "Defines big text (not supported in HTML5)"
+    }, {
+      word: "blink",
+      hint: "Defines blinking text (not supported in HTML5)"
+    }, {
+      word: "center",
+      hint: "Defines centered text (not supported in HTML5)"
+    }, {
+      word: "command",
+      hint: "Defines a command button (not supported in HTML5)"
+    }, {
+      word: "dir",
+      hint: "Defines a directory list (not supported in HTML5)"
+    }, {
+      word: "font",
+      hint: "Defines font, color, and size for text (not supported in HTML5)"
+    }, {
+      word: "frame",
+      hint: "Defines a window (a frame) in a frameset (not supported in HTML5)"
+    }, {
+      word: "frameset",
+      hint: "Defines a set of frames (not supported in HTML5)"
+    }, {
+      word: "isindex",
+      hint: "Defines a single-line input field (not supported in HTML5)"
+    }, {
+      word: "keygen",
+      hint: "Defines a key-pair generator field (not supported in HTML5)"
+    }, {
+      word: "listing",
+      hint: "Defines a listing of preformatted text (not supported in HTML5)"
+    }, {
+      word: "marquee",
+      hint: "Defines scrolling text (not supported in HTML5)"
+    }, {
+      word: "multicol",
+      hint: "Defines multiple columns (not supported in HTML5)"
+    }, {
+      word: "nextid",
+      hint: "Defines a unique identifier for the current document (not supported in HTML5)"
+    }, {
+      word: "noembed",
+      hint: "Defines alternative content for browsers that do not support the <embed> tag (not supported in HTML5)"
+    }, {
+      word: "plaintext",
+      hint: "Defines plain text (not supported in HTML5)"
+    }, {
+      word: "spacer",
+      hint: "Defines white space (not supported in HTML5)"
+    }, {
+      word: "strike",
+      hint: "Defines strikethrough text (not supported in HTML5)"
+    }, {
+      word: "tt",
+      hint: "Defines teletype text (not supported in HTML5)"
+    }, {
+      word: "xmp",
+      hint: "Defines preformatted text (not supported in HTML5)"
+    }];
     this.setState({
       words: htmlElements,
       letters: [],
@@ -62,23 +415,565 @@ var Hangmanizr = React.createClass({
       lives: this.state.initialLives,
       clickedButton: e.target.value,
       gameStarted: true,
-      score: 0
+      score: 0,
+      currentHint: "" // Reset hint
     });
     setTimeout(function () {
       this.getRandom();
     }.bind(this), 100);
   },
-  phrasalVerbsGame: function phrasalVerbsGame(e) {
-    var phrasalVerbs = ["add-up", "blow-up", "bring-up", "call-off", "carry-on", "get-along", "look-up", "pull-over", "turn-up", "watch-out"];
+  cssPropertiesGame: function cssPropertiesGame(e) {
+    var cssProperties = [{
+      word: "align-content",
+      hint: "Aligns content within a flex container along the cross axis"
+    }, {
+      word: "align-items",
+      hint: "Aligns items within a flex container along the cross axis"
+    }, {
+      word: "align-self",
+      hint: "Aligns an individual flex item along the cross axis"
+    }, {
+      word: "all",
+      hint: "Resets all properties (except unicode-bidi and direction)"
+    }, {
+      word: "animation",
+      hint: "Shorthand for animation properties"
+    }, {
+      word: "animation-delay",
+      hint: "Specifies a delay before an animation starts"
+    }, {
+      word: "animation-direction",
+      hint: "Specifies the direction of an animation"
+    }, {
+      word: "animation-duration",
+      hint: "Specifies the duration of an animation"
+    }, {
+      word: "animation-fill-mode",
+      hint: "Specifies how styles are applied before and after animation"
+    }, {
+      word: "animation-iteration-count",
+      hint: "Specifies the number of times an animation should run"
+    }, {
+      word: "animation-name",
+      hint: "Specifies the name of the @keyframes animation"
+    }, {
+      word: "animation-play-state",
+      hint: "Specifies whether an animation is running or paused"
+    }, {
+      word: "animation-timing-function",
+      hint: "Specifies the speed curve of an animation"
+    }, {
+      word: "backface-visibility",
+      hint: "Determines if the back face of an element is visible"
+    }, {
+      word: "background",
+      hint: "Shorthand for background properties"
+    }, {
+      word: "background-attachment",
+      hint: "Specifies if the background image scrolls with the page"
+    }, {
+      word: "background-blend-mode",
+      hint: "Defines the blending mode of background layers"
+    }, {
+      word: "background-clip",
+      hint: "Defines how far the background extends within an element"
+    }, {
+      word: "background-color",
+      hint: "Sets the background color of an element"
+    }, {
+      word: "background-image",
+      hint: "Sets one or more background images for an element"
+    }, {
+      word: "background-origin",
+      hint: "Specifies the positioning area of the background image"
+    }, {
+      word: "background-position",
+      hint: "Sets the starting position of a background image"
+    }, {
+      word: "background-repeat",
+      hint: "Specifies how a background image is repeated"
+    }, {
+      word: "background-size",
+      hint: "Specifies the size of the background image"
+    }, {
+      word: "border",
+      hint: "Shorthand for border properties"
+    }, {
+      word: "border-bottom",
+      hint: "Shorthand for border-bottom properties"
+    }, {
+      word: "border-bottom-color",
+      hint: "Sets the color of the bottom border"
+    }, {
+      word: "border-bottom-left-radius",
+      hint: "Defines the radius of the bottom-left corner"
+    }, {
+      word: "border-bottom-right-radius",
+      hint: "Defines the radius of the bottom-right corner"
+    }, {
+      word: "border-bottom-style",
+      hint: "Sets the style of the bottom border"
+    }, {
+      word: "border-bottom-width",
+      hint: "Sets the width of the bottom border"
+    }, {
+      word: "border-collapse",
+      hint: "Specifies whether table borders are collapsed into a single border"
+    }, {
+      word: "border-color",
+      hint: "Sets the color of the border"
+    }, {
+      word: "border-image",
+      hint: "Shorthand for border-image properties"
+    }, {
+      word: "border-image-outset",
+      hint: "Specifies the amount by which the border image extends beyond the border box"
+    }, {
+      word: "border-image-repeat",
+      hint: "Specifies how the border image is repeated"
+    }, {
+      word: "border-image-slice",
+      hint: "Specifies how to slice the border image"
+    }, {
+      word: "border-image-source",
+      hint: "Specifies the image to be used as a border"
+    }, {
+      word: "border-image-width",
+      hint: "Specifies the width of the border image"
+    }, {
+      word: "border-left",
+      hint: "Shorthand for border-left properties"
+    }, {
+      word: "border-left-color",
+      hint: "Sets the color of the left border"
+    }, {
+      word: "border-left-style",
+      hint: "Sets the style of the left border"
+    }, {
+      word: "border-left-width",
+      hint: "Sets the width of the left border"
+    }, {
+      word: "border-radius",
+      hint: "Defines the radius of the element's corners"
+    }, {
+      word: "border-right",
+      hint: "Shorthand for border-right properties"
+    }, {
+      word: "border-right-color",
+      hint: "Sets the color of the right border"
+    }, {
+      word: "border-right-style",
+      hint: "Sets the style of the right border"
+    }, {
+      word: "border-right-width",
+      hint: "Sets the width of the right border"
+    }, {
+      word: "border-spacing",
+      hint: "Sets the distance between the borders of adjacent table cells"
+    }, {
+      word: "border-style",
+      hint: "Sets the style of the border"
+    }, {
+      word: "border-top",
+      hint: "Shorthand for border-top properties"
+    }, {
+      word: "border-top-color",
+      hint: "Sets the color of the top border"
+    }, {
+      word: "border-top-left-radius",
+      hint: "Defines the radius of the top-left corner"
+    }, {
+      word: "border-top-right-radius",
+      hint: "Defines the radius of the top-right corner"
+    }, {
+      word: "border-top-style",
+      hint: "Sets the style of the top border"
+    }, {
+      word: "border-top-width",
+      hint: "Sets the width of the top border"
+    }, {
+      word: "border-width",
+      hint: "Sets the width of the border"
+    }, {
+      word: "bottom",
+      hint: "Specifies the bottom position of a positioned element"
+    }, {
+      word: "box-shadow",
+      hint: "Adds shadow effects around an element's frame"
+    }, {
+      word: "box-sizing",
+      hint: "Defines how the width and height of an element are calculated"
+    }, {
+      word: "caption-side",
+      hint: "Specifies the placement of a table caption"
+    }, {
+      word: "clear",
+      hint: "Specifies whether an element should be next to floating elements"
+    }, {
+      word: "clip",
+      hint: "Clips an absolutely positioned element"
+    }, {
+      word: "color",
+      hint: "Sets the color of text"
+    }, {
+      word: "column-count",
+      hint: "Specifies the number of columns an element should be divided into"
+    }, {
+      word: "column-fill",
+      hint: "Specifies how columns are filled"
+    }, {
+      word: "column-gap",
+      hint: "Specifies the gap between columns"
+    }, {
+      word: "column-rule",
+      hint: "Shorthand for column-rule properties"
+    }, {
+      word: "column-rule-color",
+      hint: "Sets the color of the rule between columns"
+    }, {
+      word: "column-rule-style",
+      hint: "Sets the style of the rule between columns"
+    }, {
+      word: "column-rule-width",
+      hint: "Sets the width of the rule between columns"
+    }, {
+      word: "column-span",
+      hint: "Specifies how many columns an element should span across"
+    }, {
+      word: "column-width",
+      hint: "Specifies the width of columns"
+    }, {
+      word: "columns",
+      hint: "Shorthand for column-width and column-count"
+    }, {
+      word: "content",
+      hint: "Used with ::before and ::after to insert generated content"
+    }, {
+      word: "counter-increment",
+      hint: "Increments one or more CSS counters"
+    }, {
+      word: "counter-reset",
+      hint: "Resets one or more CSS counters"
+    }, {
+      word: "cursor",
+      hint: "Specifies the mouse cursor to be displayed when pointing over an element"
+    }, {
+      word: "direction",
+      hint: "Specifies the text direction/writing direction"
+    }, {
+      word: "display",
+      hint: "Specifies the display behavior of an element"
+    }, {
+      word: "empty-cells",
+      hint: "Specifies whether to display borders on empty table cells"
+    }, {
+      word: "filter",
+      hint: "Applies graphical effects like blur or color shift to an element"
+    }, {
+      word: "flex",
+      hint: "Shorthand for flex-grow, flex-shrink, and flex-basis"
+    }, {
+      word: "flex-basis",
+      hint: "Specifies the initial size of a flex item"
+    }, {
+      word: "flex-direction",
+      hint: "Specifies the direction of the flexible items"
+    }, {
+      word: "flex-flow",
+      hint: "Shorthand for flex-direction and flex-wrap"
+    }, {
+      word: "flex-grow",
+      hint: "Specifies how much a flex item will grow relative to the rest"
+    }, {
+      word: "flex-shrink",
+      hint: "Specifies how much a flex item will shrink relative to the rest"
+    }, {
+      word: "flex-wrap",
+      hint: "Specifies whether flex items are forced onto one line or can wrap"
+    }, {
+      word: "float",
+      hint: "Specifies whether an element should float"
+    }, {
+      word: "font",
+      hint: "Shorthand for font properties"
+    }, {
+      word: "@font-face",
+      hint: "Allows custom fonts to be loaded"
+    }, {
+      word: "font-family",
+      hint: "Specifies the font family for text"
+    }, {
+      word: "font-size",
+      hint: "Specifies the size of the font"
+    }, {
+      word: "font-size-adjust",
+      hint: "Preserves the readability of text when font fallback occurs"
+    }, {
+      word: "font-stretch",
+      hint: "Selects a normal, condensed, or expanded face from a font family"
+    }, {
+      word: "font-style",
+      hint: "Specifies the font style for text"
+    }, {
+      word: "font-variant",
+      hint: "Specifies whether text should be displayed in small-caps"
+    }, {
+      word: "font-weight",
+      hint: "Specifies the weight (boldness) of the font"
+    }, {
+      word: "hanging-punctuation",
+      hint: "Specifies whether punctuation may be placed outside the line box"
+    }, {
+      word: "height",
+      hint: "Sets the height of an element"
+    }, {
+      word: "justify-content",
+      hint: "Aligns items in a flex container along the main axis"
+    }, {
+      word: "@keyframes",
+      hint: "Specifies the animation code"
+    }, {
+      word: "left",
+      hint: "Specifies the left position of a positioned element"
+    }, {
+      word: "letter-spacing",
+      hint: "Specifies the space between characters in text"
+    }, {
+      word: "line-height",
+      hint: "Specifies the height of a line"
+    }, {
+      word: "list-style",
+      hint: "Shorthand for list-style properties"
+    }, {
+      word: "list-style-image",
+      hint: "Specifies an image as the list-item marker"
+    }, {
+      word: "list-style-position",
+      hint: "Specifies the position of the list-item marker"
+    }, {
+      word: "list-style-type",
+      hint: "Specifies the type of list-item marker"
+    }, {
+      word: "margin",
+      hint: "Sets the margin area on all four sides of an element"
+    }, {
+      word: "margin-bottom",
+      hint: "Sets the bottom margin of an element"
+    }, {
+      word: "margin-left",
+      hint: "Sets the left margin of an element"
+    }, {
+      word: "margin-right",
+      hint: "Sets the right margin of an element"
+    }, {
+      word: "margin-top",
+      hint: "Sets the top margin of an element"
+    }, {
+      word: "max-height",
+      hint: "Sets the maximum height of an element"
+    }, {
+      word: "max-width",
+      hint: "Sets the maximum width of an element"
+    }, {
+      word: "@media",
+      hint: "Applies styles based on media queries"
+    }, {
+      word: "min-height",
+      hint: "Sets the minimum height of an element"
+    }, {
+      word: "min-width",
+      hint: "Sets the minimum width of an element"
+    }, {
+      word: "nav-down",
+      hint: "Specifies where to navigate when using the arrow-down key"
+    }, {
+      word: "nav-index",
+      hint: "Specifies the tabbing order for navigation"
+    }, {
+      word: "nav-left",
+      hint: "Specifies where to navigate when using the arrow-left key"
+    }, {
+      word: "nav-right",
+      hint: "Specifies where to navigate when using the arrow-right key"
+    }, {
+      word: "nav-up",
+      hint: "Specifies where to navigate when using the arrow-up key"
+    }, {
+      word: "opacity",
+      hint: "Sets the transparency level of an element"
+    }, {
+      word: "order",
+      hint: "Specifies the order of a flex item"
+    }, {
+      word: "outline",
+      hint: "Shorthand for outline properties"
+    }, {
+      word: "outline-color",
+      hint: "Sets the color of the outline"
+    }, {
+      word: "outline-offset",
+      hint: "Sets the space between an outline and the edge of an element"
+    }, {
+      word: "outline-style",
+      hint: "Sets the style of the outline"
+    }, {
+      word: "outline-width",
+      hint: "Sets the width of the outline"
+    }, {
+      word: "overflow",
+      hint: "Specifies what happens if content overflows an element's box"
+    }, {
+      word: "overflow-x",
+      hint: "Specifies what happens if content overflows an element's box horizontally"
+    }, {
+      word: "overflow-y",
+      hint: "Specifies what happens if content overflows an element's box vertically"
+    }, {
+      word: "padding",
+      hint: "Sets the padding area on all four sides of an element"
+    }, {
+      word: "padding-bottom",
+      hint: "Sets the bottom padding of an element"
+    }, {
+      word: "padding-left",
+      hint: "Sets the left padding of an element"
+    }, {
+      word: "padding-right",
+      hint: "Sets the right padding of an element"
+    }, {
+      word: "padding-top",
+      hint: "Sets the top padding of an element"
+    }, {
+      word: "page-break-after",
+      hint: "Specifies the page break behavior after an element"
+    }, {
+      word: "page-break-before",
+      hint: "Specifies the page break behavior before an element"
+    }, {
+      word: "page-break-inside",
+      hint: "Specifies the page break behavior inside an element"
+    }, {
+      word: "perspective",
+      hint: "Gives a 3D-positioned element some perspective"
+    }, {
+      word: "perspective-origin",
+      hint: "Defines the origin for the perspective property"
+    }, {
+      word: "position",
+      hint: "Specifies the type of positioning method used for an element"
+    }, {
+      word: "quotes",
+      hint: "Specifies the quotation marks for embedded quotations"
+    }, {
+      word: "resize",
+      hint: "Specifies whether an element is resizable by the user"
+    }, {
+      word: "right",
+      hint: "Specifies the right position of a positioned element"
+    }, {
+      word: "tab-size",
+      hint: "Specifies the width of tab characters"
+    }, {
+      word: "table-layout",
+      hint: "Specifies the algorithm used to lay out table cells"
+    }, {
+      word: "text-align",
+      hint: "Specifies the horizontal alignment of text"
+    }, {
+      word: "text-align-last",
+      hint: "Specifies how the last line of a block or a line is aligned"
+    }, {
+      word: "text-decoration",
+      hint: "Specifies the decoration added to text"
+    }, {
+      word: "text-decoration-color",
+      hint: "Sets the color of the text decoration"
+    }, {
+      word: "text-decoration-line",
+      hint: "Sets the type of text decoration"
+    }, {
+      word: "text-decoration-style",
+      hint: "Sets the style of the text decoration"
+    }, {
+      word: "text-indent",
+      hint: "Specifies the indentation of the first line in a text block"
+    }, {
+      word: "text-justify",
+      hint: "Specifies the justification method for text"
+    }, {
+      word: "text-overflow",
+      hint: "Specifies how overflowed content that is not displayed should be signaled"
+    }, {
+      word: "text-shadow",
+      hint: "Adds shadow to text"
+    }, {
+      word: "text-transform",
+      hint: "Controls the capitalization of text"
+    }, {
+      word: "top",
+      hint: "Specifies the top position of a positioned element"
+    }, {
+      word: "transform",
+      hint: "Applies a 2D or 3D transformation to an element"
+    }, {
+      word: "transform-origin",
+      hint: "Sets the origin for an element's transformations"
+    }, {
+      word: "transform-style",
+      hint: "Specifies how nested elements are rendered in 3D space"
+    }, {
+      word: "transition",
+      hint: "Shorthand for transition properties"
+    }, {
+      word: "transition-delay",
+      hint: "Specifies a delay before a transition effect starts"
+    }, {
+      word: "transition-duration",
+      hint: "Specifies the duration of a transition effect"
+    }, {
+      word: "transition-property",
+      hint: "Specifies the CSS properties to which a transition effect should be applied"
+    }, {
+      word: "transition-timing-function",
+      hint: "Specifies the speed curve of a transition effect"
+    }, {
+      word: "unicode-bidi",
+      hint: "Used with direction to handle bidirectional text"
+    }, {
+      word: "vertical-align",
+      hint: "Sets the vertical alignment of an element"
+    }, {
+      word: "visibility",
+      hint: "Specifies whether an element is visible or hidden"
+    }, {
+      word: "white-space",
+      hint: "Specifies how white-space inside an element is handled"
+    }, {
+      word: "width",
+      hint: "Sets the width of an element"
+    }, {
+      word: "word-break",
+      hint: "Specifies how words should break when reaching the end of a line"
+    }, {
+      word: "word-spacing",
+      hint: "Specifies the space between words"
+    }, {
+      word: "word-wrap",
+      hint: "Specifies whether to break words when they overflow their container"
+    }, {
+      word: "z-index",
+      hint: "Specifies the stack order of an element"
+    }];
     this.setState({
-      words: phrasalVerbs,
+      words: cssProperties,
       letters: [],
       clickedLetters: [],
       matchedLetters: [],
       lives: this.state.initialLives,
       clickedButton: e.target.value,
       gameStarted: true,
-      score: 0
+      score: 0,
+      currentHint: "" // Reset hint
     });
     setTimeout(function () {
       this.getRandom();
@@ -89,20 +984,16 @@ var Hangmanizr = React.createClass({
     var random = this.state.words[randomNum];
     this.state.words.splice(randomNum, 1);
     this.setState({
-      randomWord: random
+      randomWord: random.word,
+      currentHint: random.hint // Set the hint for the current word
     });
-    {
-      /* click start and trigger splitLetters() */
-    }
     setTimeout(function () {
       this.splitLetters();
     }.bind(this), 100);
-    {
-      /* click start and trigger splitLetters() */
-    }
   },
   splitLetters: function splitLetters() {
     var s = this.state.randomWord.toUpperCase();
+    this.state.letters = []; // Clear previous letters
     for (var i = 0; i < s.length; i++) {
       this.state.letters.push(s.charAt(i));
     }
@@ -155,7 +1046,8 @@ var Hangmanizr = React.createClass({
             clickedLetters: [],
             matchedLetters: [],
             lives: this.state.initialLives,
-            nextWord: false
+            nextWord: false,
+            currentHint: "" // Reset hint for the next word
           });
           this.state.letters.splice(0, this.state.letters.length);
           {
@@ -165,7 +1057,9 @@ var Hangmanizr = React.createClass({
           var random = this.state.words[randomNum];
           this.state.words.splice(randomNum, 1);
           this.setState({
-            randomWord: random
+            randomWord: random.word,
+            // Update to use random.word
+            currentHint: random.hint // Set hint for the new word
           });
           {
             /* get new random word*/
@@ -173,7 +1067,7 @@ var Hangmanizr = React.createClass({
           {
             /* push new random word's letters to letters array */
           }
-          var s = random.toUpperCase();
+          var s = random.word.toUpperCase(); // Update to use random.word
           for (var i = 0; i < s.length; i++) {
             this.state.letters.splice();
             this.state.letters.push(s.charAt(i));
@@ -228,7 +1122,8 @@ var Hangmanizr = React.createClass({
           clickedLetters: [],
           lives: this.state.initialLives,
           nextWord: false,
-          score: this.state.score + 1
+          score: this.state.score + 1,
+          currentHint: "" // Reset hint for the next word
         });
         {
           /* check if game is over */
@@ -261,7 +1156,9 @@ var Hangmanizr = React.createClass({
         var random = this.state.words[randomNum];
         this.state.words.splice(randomNum, 1);
         this.setState({
-          randomWord: random
+          randomWord: random.word,
+          // Update to use random.word
+          currentHint: random.hint // Set hint for the new word
         });
         {
           /* get new random word */
@@ -269,7 +1166,7 @@ var Hangmanizr = React.createClass({
         {
           /* push the new random words letters to letters array */
         }
-        var s = random.toUpperCase();
+        var s = random.word.toUpperCase(); // Update to use random.word
         for (var i = 0; i < s.length; i++) {
           this.state.letters.splice();
           this.state.letters.push(s.charAt(i));
@@ -309,7 +1206,7 @@ var Hangmanizr = React.createClass({
   },
   render: function render() {
     return /*#__PURE__*/React.createElement("div", {
-      className: this.state.gameOver ? "container gameOver" : "container "
+      className: this.state.gameOver ? "container gameOver" : "container"
     }, /*#__PURE__*/React.createElement("header", null, /*#__PURE__*/React.createElement("a", {
       href: "https://mburakerman.github.io/hangmanizr/",
       className: "title"
@@ -357,7 +1254,7 @@ var Hangmanizr = React.createClass({
       className: this.state.gameStarted ? "game-levels-wrapper pointer-events-none" : "game-levels-wrapper pointer-events-auto"
     }, /*#__PURE__*/React.createElement("button", {
       onClick: this.easyLevel,
-      clasName: "easy-mode",
+      className: "easy-mode",
       value: "easy",
       disabled: this.state.chosenLevel === "easy"
     }, /*#__PURE__*/React.createElement("svg", {
@@ -369,7 +1266,7 @@ var Hangmanizr = React.createClass({
       d: "M18.737,9.691h-5.462c-0.279,0-0.527,0.174-0.619,0.437l-1.444,4.104L8.984,3.195c-0.059-0.29-0.307-0.506-0.603-0.523C8.09,2.657,7.814,2.838,7.721,3.12L5.568,9.668H1.244c-0.36,0-0.655,0.291-0.655,0.655c0,0.36,0.294,0.655,0.655,0.655h4.8c0.281,0,0.532-0.182,0.621-0.45l1.526-4.645l2.207,10.938c0.059,0.289,0.304,0.502,0.595,0.524c0.016,0,0.031,0,0.046,0c0.276,0,0.524-0.174,0.619-0.437L13.738,11h4.999c0.363,0,0.655-0.294,0.655-0.655C19.392,9.982,19.1,9.691,18.737,9.691z"
     })), " ", "Easy"), /*#__PURE__*/React.createElement("button", {
       onClick: this.mediumLevel,
-      clasName: "medium-mode",
+      className: "medium-mode",
       value: "medium",
       disabled: this.state.chosenLevel === "medium"
     }, /*#__PURE__*/React.createElement("svg", {
@@ -381,7 +1278,7 @@ var Hangmanizr = React.createClass({
       d: "M18.737,9.691h-5.462c-0.279,0-0.527,0.174-0.619,0.437l-1.444,4.104L8.984,3.195c-0.059-0.29-0.307-0.506-0.603-0.523C8.09,2.657,7.814,2.838,7.721,3.12L5.568,9.668H1.244c-0.36,0-0.655,0.291-0.655,0.655c0,0.36,0.294,0.655,0.655,0.655h4.8c0.281,0,0.532-0.182,0.621-0.45l1.526-4.645l2.207,10.938c0.059,0.289,0.304,0.502,0.595,0.524c0.016,0,0.031,0,0.046,0c0.276,0,0.524-0.174,0.619-0.437L13.738,11h4.999c0.363,0,0.655-0.294,0.655-0.655C19.392,9.982,19.1,9.691,18.737,9.691z"
     })), " ", "Medium"), /*#__PURE__*/React.createElement("button", {
       onClick: this.hardLevel,
-      clasName: "hard-mode",
+      className: "hard-mode",
       value: "hard",
       disabled: this.state.chosenLevel === "hard"
     }, /*#__PURE__*/React.createElement("svg", {
@@ -394,17 +1291,6 @@ var Hangmanizr = React.createClass({
     })), " ", "Hard")))), /*#__PURE__*/React.createElement("div", {
       className: "start-game-buttons-wrapper"
     }, /*#__PURE__*/React.createElement("button", {
-      "data-tooltip": "180 words",
-      className: "topic",
-      onClick: this.cssPropertiesGame,
-      value: "css",
-      disabled: this.state.clickedButton === "css"
-    }, /*#__PURE__*/React.createElement("svg", {
-      viewBox: "0 0 470.699 470.699",
-      className: "topicsSvg cssSvg"
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M426.981,0H43.701C34.52,0,27.632,7.769,28.442,16.949L63.45,409.254c0.811,9.173,8.745,18.774,17.644,21.253\r l138.006,38.335c8.887,2.463,23.413,2.479,32.313,0.032l138.177-38.281c8.901-2.472,16.835-11.986,17.645-21.175l35.023-392.469\r C443.068,7.769,436.209,0,426.981,0z M360.51,141.611c-0.006,0.06-0.053,0.107-0.112,0.117c-0.06,0.01-0.118-0.021-0.144-0.077\r L252.13,185.96c-1.54,0.631-2.418,2.264-2.098,3.897c0.322,1.633,1.754,2.811,3.419,2.811h84.103c4.474,0,8.736,1.9,11.728,5.227\r c2.991,3.327,4.429,7.768,3.954,12.216l-13.141,123.273c-0.645,6.048-4.709,11.186-10.447,13.205l-89.269,31.41\r c-3.362,1.184-7.027,1.193-10.397,0.025l-88.852-30.778c-5.773-2-9.871-7.153-10.52-13.228l-5.957-55.828\r c-0.313-2.931,0.634-5.857,2.604-8.048c1.971-2.192,4.779-3.444,7.727-3.444h24.725c5.313,0,9.769,4.007,10.331,9.289l3.655,34.316\r l61.521,21.385l61.803-21.58l7.559-71.17H129.835c-5.297,0-9.746-3.985-10.327-9.25l-3.327-30.164\r c-0.508-4.601,2.088-8.982,6.366-10.745l111.837-46.109c1.269-0.523,1.99-1.868,1.724-3.214c-0.267-1.345-1.446-2.314-2.817-2.314\r H115.542c-3.545,0-6.518-2.677-6.888-6.201l-3.406-32.421c-0.205-1.951,0.428-3.898,1.741-5.357\r c1.313-1.458,3.184-2.291,5.146-2.291h246.379c1.973,0,3.852,0.842,5.166,2.313c1.314,1.472,1.938,3.434,1.715,5.394L360.51,141.611z"
-    })), " ", "CSS Properties"), /*#__PURE__*/React.createElement("button", {
       "data-tooltip": "129 words",
       className: "topic",
       onClick: this.htmlElementsGame,
@@ -415,19 +1301,30 @@ var Hangmanizr = React.createClass({
       className: "topicsSvg htmlSvg"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M27.405,0l36.542,410.56l163.882,46.244l165.022-46.244L429.398,0H27.405z M350.025,133.904h-192.43l4.283,51.676h183.866\r l-14.273,155.315l-102.499,28.26v0.287h-1.143l-103.356-28.547l-6.28-79.367h49.965l3.711,39.971l55.959,15.126l56.245-15.126\r l6.283-65.097H115.625l-13.418-152.46h252.392L350.025,133.904z"
-    })), " ", "HTML Elements")), /*#__PURE__*/React.createElement("div", {
+    })), " ", "HTML Elements"), /*#__PURE__*/React.createElement("button", {
+      "data-tooltip": "180 words",
+      className: "topic",
+      onClick: this.cssPropertiesGame,
+      value: "css",
+      disabled: this.state.clickedButton === "css"
+    }, /*#__PURE__*/React.createElement("svg", {
+      viewBox: "0 0 470.699 470.699",
+      className: "topicsSvg cssSvg"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M426.981,0H43.701C34.52,0,27.632,7.769,28.442,16.949L63.45,409.254c0.811,9.173,8.745,18.774,17.644,21.253\r l138.006,38.335c8.887,2.463,23.413,2.479,32.313,0.032l138.177-38.281c8.901-2.472,16.835-11.986,17.645-21.175l35.023-392.469\r C443.068,7.769,436.209,0,426.981,0z M360.51,141.611c-0.006,0.06-0.053,0.107-0.112,0.117c-0.06,0.01-0.118-0.021-0.144-0.077\r L252.13,185.96c-1.54,0.631-2.418,2.264-2.098,3.897c0.322,1.633,1.754,2.811,3.419,2.811h84.103c4.474,0,8.736,1.9,11.728,5.227\r c2.991,3.327,4.429,7.768,3.954,12.216l-13.141,123.273c-0.645,6.048-4.709,11.186-10.447,13.205l-89.269,31.41\r c-3.362,1.184-7.027,1.193-10.397,0.025l-88.852-30.778c-5.773-2-9.871-7.153-10.52-13.228l-5.957-55.828\r c-0.313-2.931,0.634-5.857,2.604-8.048c1.971-2.192,4.779-3.444,7.727-3.444h24.725c5.313,0,9.769,4.007,10.331,9.289l3.655,34.316\r l61.521,21.385l61.803-21.58l7.559-71.17H129.835c-5.297,0-9.746-3.985-10.327-9.25l-3.327-30.164\r c-0.508-4.601,2.088-8.982,6.366-10.745l111.837-46.109c1.269-0.523,1.99-1.868,1.724-3.214c-0.267-1.345-1.446-2.314-2.817-2.314\r H115.542c-3.545,0-6.518-2.677-6.888-6.201l-3.406-32.421c-0.205-1.951,0.428-3.898,1.741-5.357\r c1.313-1.458,3.184-2.291,5.146-2.291h246.379c1.973,0,3.852,0.842,5.166,2.313c1.314,1.472,1.938,3.434,1.715,5.394L360.51,141.611z"
+    })), " ", "CSS Properties")), /*#__PURE__*/React.createElement("div", {
       className: "letters-wrapper"
-    }, " ", /*#__PURE__*/React.createElement("ul", {
+    }, /*#__PURE__*/React.createElement("ul", {
       className: "letters"
     }, this.state.letters.map(function (item) {
-      return (
-        /*#__PURE__*/
-        //<li className={ this.state.matchedLetters.indexOf(item) !==-1 ? "foundedLetter":"letter"}>{item}</li>
-        React.createElement("li", {
-          className: this.state.matchedLetters.includes(item) ? "foundedLetter" : "letter"
-        }, item)
-      );
-    }, this))), " ", /*#__PURE__*/React.createElement("div", {
+      return /*#__PURE__*/React.createElement("li", {
+        className: this.state.matchedLetters.includes(item) ? "foundedLetter" : "letter"
+      }, item);
+    }, this))), /*#__PURE__*/React.createElement("div", {
+      className: "hint-wrapper"
+    }, /*#__PURE__*/React.createElement("p", {
+      className: "hint-text"
+    }, "Hint: ", this.state.currentHint)), /*#__PURE__*/React.createElement("div", {
       className: "for-loader"
     }, /*#__PURE__*/React.createElement("div", {
       className: this.state.nextWord ? "disable" : "enable"
@@ -442,12 +1339,12 @@ var Hangmanizr = React.createClass({
         className: this.state.clickedLetters.includes(item) ? "clickedLetter" : "alphabetLetters",
         onClick: this.checkLetter.bind(this)
       }, item);
-    }, this))), " ")), /*#__PURE__*/React.createElement("img", {
+    }, this))))), /*#__PURE__*/React.createElement("img", {
       className: this.state.nextWord ? "show-svg-loader" : "hide-svg-loader",
       src: "data:image/svg+xml;base64,PCEtLSBCeSBTYW0gSGVyYmVydCAoQHNoZXJiKSwgZm9yIGV2ZXJ5b25lLiBNb3JlIEAgaHR0cDovL2dvby5nbC83QUp6YkwgLS0+Cjxzdmcgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiB2aWV3Qm94PSIwIDAgNDQgNDQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLXdpZHRoPSIyIj4KICAgICAgICA8Y2lyY2xlIGN4PSIyMiIgY3k9IjIyIiByPSIxIj4KICAgICAgICAgICAgPGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIKICAgICAgICAgICAgICAgIGJlZ2luPSIwcyIgZHVyPSIxLjhzIgogICAgICAgICAgICAgICAgdmFsdWVzPSIxOyAyMCIKICAgICAgICAgICAgICAgIGNhbGNNb2RlPSJzcGxpbmUiCiAgICAgICAgICAgICAgICBrZXlUaW1lcz0iMDsgMSIKICAgICAgICAgICAgICAgIGtleVNwbGluZXM9IjAuMTY1LCAwLjg0LCAwLjQ0LCAxIgogICAgICAgICAgICAgICAgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIC8+CiAgICAgICAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9InN0cm9rZS1vcGFjaXR5IgogICAgICAgICAgICAgICAgYmVnaW49IjBzIiBkdXI9IjEuOHMiCiAgICAgICAgICAgICAgICB2YWx1ZXM9IjE7IDAiCiAgICAgICAgICAgICAgICBjYWxjTW9kZT0ic3BsaW5lIgogICAgICAgICAgICAgICAga2V5VGltZXM9IjA7IDEiCiAgICAgICAgICAgICAgICBrZXlTcGxpbmVzPSIwLjMsIDAuNjEsIDAuMzU1LCAxIgogICAgICAgICAgICAgICAgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIC8+CiAgICAgICAgPC9jaXJjbGU+CiAgICAgICAgPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMSI+CiAgICAgICAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9InIiCiAgICAgICAgICAgICAgICBiZWdpbj0iLTAuOXMiIGR1cj0iMS44cyIKICAgICAgICAgICAgICAgIHZhbHVlcz0iMTsgMjAiCiAgICAgICAgICAgICAgICBjYWxjTW9kZT0ic3BsaW5lIgogICAgICAgICAgICAgICAga2V5VGltZXM9IjA7IDEiCiAgICAgICAgICAgICAgICBrZXlTcGxpbmVzPSIwLjE2NSwgMC44NCwgMC40NCwgMSIKICAgICAgICAgICAgICAgIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPgogICAgICAgICAgICA8YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJzdHJva2Utb3BhY2l0eSIKICAgICAgICAgICAgICAgIGJlZ2luPSItMC45cyIgZHVyPSIxLjhzIgogICAgICAgICAgICAgICAgdmFsdWVzPSIxOyAwIgogICAgICAgICAgICAgICAgY2FsY01vZGU9InNwbGluZSIKICAgICAgICAgICAgICAgIGtleVRpbWVzPSIwOyAxIgogICAgICAgICAgICAgICAga2V5U3BsaW5lcz0iMC4zLCAwLjYxLCAwLjM1NSwgMSIKICAgICAgICAgICAgICAgIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPgogICAgICAgIDwvY2lyY2xlPgogICAgPC9nPgo8L3N2Zz4="
     })), /*#__PURE__*/React.createElement("div", {
       className: this.state.gameStarted ? "lives-words-left-wrapper" : "lives-words-left-wrapper displayNone"
-    }, " ", /*#__PURE__*/React.createElement("p", {
+    }, /*#__PURE__*/React.createElement("p", {
       className: "lives"
     }, /*#__PURE__*/React.createElement("svg", {
       className: "svg-icon",
@@ -473,7 +1370,7 @@ var Hangmanizr = React.createClass({
       viewBox: "0 0 20 20"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M18.303,4.742l-1.454-1.455c-0.171-0.171-0.475-0.171-0.646,0l-3.061,3.064H2.019c-0.251,0-0.457,0.205-0.457,0.456v9.578c0,0.251,0.206,0.456,0.457,0.456h13.683c0.252,0,0.457-0.205,0.457-0.456V7.533l2.144-2.146C18.481,5.208,18.483,4.917,18.303,4.742 M15.258,15.929H2.476V7.263h9.754L9.695,9.792c-0.057,0.057-0.101,0.13-0.119,0.212L9.18,11.36h-3.98c-0.251,0-0.457,0.205-0.457,0.456c0,0.253,0.205,0.456,0.457,0.456h4.336c0.023,0,0.899,0.02,1.498-0.127c0.312-0.077,0.55-0.137,0.55-0.137c0.08-0.018,0.155-0.059,0.212-0.118l3.463-3.443V15.929z M11.241,11.156l-1.078,0.267l0.267-1.076l6.097-6.091l0.808,0.808L11.241,11.156z"
-    })), " ", "Score: ", this.state.score)), " "), /*#__PURE__*/React.createElement("div", {
+    })), " ", "Score: ", this.state.score))), /*#__PURE__*/React.createElement("div", {
       className: this.state.gameOver ? "modal" : "modal modalHide"
     }, /*#__PURE__*/React.createElement("p", {
       className: "close-modal",
